@@ -19,7 +19,7 @@ const Formulario = () => {
   const agregarProducto = (e) => {
     e.preventDefault();
     validarFormulario();
-    if (!valido) {
+    if (valido) {
       setProductos(...productos, {
         id: nanoid(),
         nombre: nombre,
@@ -32,30 +32,33 @@ const Formulario = () => {
       setCantidad(0)
       setValor(0)
       console.log(productos);
-    }else{
-      setErrNombre("")
-      setErrValor("")
-      setErrCantidad("")
-      setErrValor("")
     }
   };
 
   const validarFormulario = () => {
-    if (!nombre.trim()) {
+    if ( nombre.trim() === '' ) {
       setErrNombre("Debe ingresar el nombre")
       valido = false;
+    }else{
+      setErrNombre("")
     }
-    if (descripcion === "") {
+    if ( descripcion.trim() === '' ) {
       setErrDescripcion("Debe ingresar la descripción")
       valido = false;
+    }else{
+      setErrValor("")
     }
-    if (cantidad === "") {
+    if ( cantidad === 0 ) {
       setErrCantidad("Debe ingresar la cantidad")
       valido = false;
+    }else{
+      setErrCantidad("")
     }
-    if (valor === "") {
-      setErrCantidad("Debe ingresar el valor")
+    if ( valor === 0 ) {
+      setErrValor("Debe ingresar el valor")
       valido = false;
+    }else{
+      setErrValor("")
     }
     setValido(valido);
   };
@@ -71,7 +74,7 @@ const Formulario = () => {
         <div className="col-sm-4 border-column">
           <h3>Formulario</h3>
           <form onSubmit={agregarProducto}>
-            { errNombre==="" ? null : <span>{errNombre}</span> }
+            { errNombre === '' ? null : <span>{errNombre}</span> }
             <input
               type="text"
               placeholder="Nombre del producto"
@@ -79,21 +82,21 @@ const Formulario = () => {
               onChange={(e) => setNombre(e.target.value)}
               value={nombre}
             />
-            { errDescripcion==="" ? null : <span>{errDescripcion}</span> }
+            { errDescripcion === '' ? null : <span>{errDescripcion}</span> }
             <input
               type="text"
               placeholder="Descripción"
               className="form-control mb-2"
               onChange={(e) => setDescripcion(e.target.value)}
             />
-            { errCantidad==="" ? null : <span>{errCantidad}</span> }
+            { errCantidad === '' ? null : <span>{errCantidad}</span> }
             <input
               type="number"
               placeholder="Cantidad"
               className="form-control mb-2"
               onChange={(e) => setCantidad(e.target.value)}
             />
-            { errValor === "" ? null : <span>{errValor}</span> }
+            { errValor === '' ? null : <span>{errValor}</span> }
             <input
               type="text"
               placeholder="Valor"
