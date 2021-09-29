@@ -1,149 +1,183 @@
-import React, { useState } from "react";
-import { nanoid } from "nanoid";
+import React, { useState } from 'react'
+import { nanoid } from 'nanoid'
 
-const Formulario = () => {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [cantidad, setCantidad] = useState(0);
-  const [valor, setValor] = useState(0);  
-  const producto = [];
-  const [productos, setProductos] = useState(producto);
+const Productos = () => {
 
-  //variables para valdar formulario
-  let [valido, setValido] = useState(true);
-  let [errNombre, setErrNombre] = useState("");
-  let [errDescripcion, setErrDescripcion] = useState("");
-  let [errCantidad, setErrCantidad] = useState("");
-  let [errValor, setErrValor] = useState("");
+    const [productos, setProductos] = useState([])
 
-  const agregarProducto = (e) => {
-    e.preventDefault();
-    validarFormulario();
-    if (valido) {
-      setProductos(...productos, {
-        id: nanoid(),
-        nombre: nombre,
-        descripcion: descripcion,
-        cantidad: cantidad,
-        valor: valor,
-      });
-      setNombre("")
-      setDescripcion("")
-      setCantidad(0)
-      setValor(0)
-      console.log(productos);
+    const [ nombre, setNombre ] = useState("")
+    const [ descripcion, setDescripcion ] = useState("")
+    const [ cantidad, setCantidad] = useState(0)
+    const [ valor, setValor ] =useState(0)
+
+    const [errNombre, setErrNombre] = useState(null)
+    const [errDescripcion, setErrDescripcion] = useState(null)
+    const [errCantidad, setErrCantidad] = useState(null)
+    const [errValor, setErrValor] = useState(null)
+
+    let [isEdit, setIsEdit] = useState(false)
+
+    const agregarProducto = e =>{
+        e.preventDefault()
+
+        if( !nombre.trim()){
+            setErrNombre('El campo nombre no puede estar vacio')
+        }
+        else if( !descripcion.trim()){
+            setErrDescripcion('El campo nombre no puede estar vacio')
+        }
+        else if( !cantidad.trim()){
+            setErrCantidad('El campo nombre no puede estar vacio')
+        }
+        else if( !valor.trim()){
+            setErrValor('El campo nombre no puede estar vacio')
+        }else{
+
+            setProductos(
+                [
+                    ...productos,
+                    {
+                        id: nanoid(),
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        cantidad:cantidad,
+                        valor: valor
+                    }
+                ]
+            )
+            setNombre('')
+            setDescripcion('')
+            setCantidad('')
+            setValor('')
+        } 
     }
-  };
 
-  const validarFormulario = () => {
-    if ( nombre.trim() === '' ) {
-      setErrNombre("Debe ingresar el nombre")
-      valido = false;
-    }else{
-      setErrNombre("")
+    const eliminarProducto = (id) => {
+        const productoFiltro = productos.filter( item => item.id !== id )
+        setProductos(productoFiltro)
     }
-    if ( descripcion.trim() === '' ) {
-      setErrDescripcion("Debe ingresar la descripción")
-      valido = false;
-    }else{
-      setErrValor("")
-    }
-    if ( cantidad === 0 ) {
-      setErrCantidad("Debe ingresar la cantidad")
-      valido = false;
-    }else{
-      setErrCantidad("")
-    }
-    if ( valor === 0 ) {
-      setErrValor("Debe ingresar el valor")
-      valido = false;
-    }else{
-      setErrValor("")
-    }
-    setValido(valido);
-  };
 
-  return (
-    <div className="container">
-      <div className="row text-center">
-        <h1>Taller Crud React</h1>
-        <p>Productos</p>
-      </div>
+    const editarProducto = (item) => {
+        setIsEdit(true)
+        setNombre(item.nombre)
+        setDescripcion(item.descripcion)
+        setCantidad(item.cantidad)
+        setValor(item.valor)
 
-      <div className="row">
-        <div className="col-sm-4 border-column">
-          <h3>Formulario</h3>
-          <form onSubmit={agregarProducto}>
-            { errNombre === '' ? null : <span>{errNombre}</span> }
-            <input
-              type="text"
-              placeholder="Nombre del producto"
-              className="form-control mb-2"
-              onChange={(e) => setNombre(e.target.value)}
-              value={nombre}
-            />
-            { errDescripcion === '' ? null : <span>{errDescripcion}</span> }
-            <input
-              type="text"
-              placeholder="Descripción"
-              className="form-control mb-2"
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
-            { errCantidad === '' ? null : <span>{errCantidad}</span> }
-            <input
-              type="number"
-              placeholder="Cantidad"
-              className="form-control mb-2"
-              onChange={(e) => setCantidad(e.target.value)}
-            />
-            { errValor === '' ? null : <span>{errValor}</span> }
-            <input
-              type="text"
-              placeholder="Valor"
-              className="form-control mb-2"
-              onChange={(e) => setValor(e.target.value)}
-            />            
-            <button type="submit" className="btn btn-primary mb-2 btn-block">
-              Enviar
-            </button>
-          </form>
+        let idxProd = productos.findIndex( x => x.id === item.id)
+        productos[idxProd].nombre = nombre
+        setProductos(productos)        
+    }
+
+    return (
+
+        <div className="container">
+
+            <div className="row text-center back-header">
+                <h1 className="animate__animated animate__backInUp"> <b> TALLER CRUD REACT</b></h1>
+                <h2> <b> Productos </b> </h2>
+            </div>
+            <div className="row">
+                <div className="col-sm-4">
+                    <br/>
+                    <h3><b>Formulario</b></h3>
+                    <form onSubmit={agregarProducto}>
+                        
+                        <div className="form-group">
+                        <label>Nombre producto:</label>
+                        <input
+                            type="text"
+                            placeholder="Nombre del produto"
+                            className="form-control mb-2" 
+                            onChange={ e => setNombre( e.target.value) }
+                            value={nombre}
+                        />
+                        { errNombre ? <small className="text-danger">{errNombre}</small>: null }
+                        </div>
+                        <div className="form-group">
+                            <label>Descripción:</label>
+                            <input
+                                type="text"
+                                placeholder="Descripción"
+                                className="form-control mb-2"
+                                onChange={ e => setDescripcion( e.target.value) }
+                                value={descripcion} 
+                            />
+                            { errDescripcion ? <small className="text-danger">{errDescripcion}</small>: null }
+                        </div>
+                        <div className="form-group">
+                            <label>Cantidad:</label>
+                            <input
+                                type="number"
+                                placeholder="Cantidad"
+                                className="form-control mb-2"
+                                onChange={ (e) => setCantidad( e.target.value) } 
+                                value={cantidad}
+                            />
+                            { errCantidad ? <small className="text-danger">{errCantidad}</small>: null }
+
+                        </div>
+                        <div className="form-group">
+                            <label>Valor:</label>
+                            <input
+                                type="number"
+                                placeholder="Valor"
+                                className="form-control mb-2" 
+                                onChange={ e => setValor( e.target.value ) }
+                                value={valor}
+                            />
+                            { errValor ? <small className="text-danger">{errValor}</small>: null }
+
+                        </div>
+                        <button type="submit" className="btn btn-dark" >{isEdit ? "Editar":"Enviar"}</button>
+                    </form>
+
+
+                </div>
+                <div className="col-sm-8">
+                    <br/>
+                    <h3><b>Lista de productos</b></h3>
+
+                    <ul className="list-group">
+                        {
+
+                            productos.length === 0 ? (<li className="list-group-item">Sin productos</li>) : 
+                            (
+                                productos.map(
+                                    (item) => (
+                                        <li className="list-group-item mb-2 animate__animated animate__bounceInLeft" key={item.id}> 
+                                            <div>
+                                                <h4>{ item.nombre}</h4>
+                                                <h5>{ item.descripcion}</h5>
+                                                <h6>Cantidad: { item.cantidad}</h6>
+                                                <h6>Valor: { item.valor}</h6>
+                                            </div>
+                                            <div align="right">
+                                                <button className="btn btn-sm btn-success mx-2" onClick={ () => editarProducto(item) }> Editar </button>
+                                                <button className="btn btn-sm btn-info" onClick={ () => eliminarProducto(item.id) } > Eliminar </button>
+                                            </div>
+                                        </li>
+    
+                                    )
+                                )
+
+                            )
+                            
+                        }
+
+
+                    </ul>
+
+                   
+                </div>
+
+            </div>
+
         </div>
-        <div className="col-sm-8 border-column">
-          <h3>Lista de productos</h3>
 
-          <ul className="list-group">
-            {
-              productos.map(
+        
+        
+    )
+}
 
-                (item) => (
-
-                  <li className="list-group-item" key={item.id}>
-
-                    <div>
-
-                      <h2>{item.nombre}</h2>
-
-                      <h2>{item.descripcion}</h2>
-
-                      <h2>{item.cantidad}</h2>
-
-                      <h2>{item.valor}</h2>
-
-                    </div>
-
-                    <button className="btn btn-sm btn-warning mx-2">Editar</button>
-
-                    <button className="btn btn-sm btn-danger">Eliminar</button>
-
-                  </li>
-                )
-              )
-            }
-          </ul>
-        </div>
-      </div>
-    </div>
-  )
-};
-
-export default Formulario;
+export default Productos
