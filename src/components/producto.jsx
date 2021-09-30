@@ -68,7 +68,8 @@ const Productos = () => {
         setId(item.id)
     }
 
-    const actualizarProducto = () => {
+    const actualizarProducto = e => {
+        e.preventDefault()
         let productoActualizado = {
             id: id,
             nombre: nombre,
@@ -85,6 +86,7 @@ const Productos = () => {
         setCantidad(0)
         setValor(0)
         setId('')
+        setIsEdit(false)
     }
 
 

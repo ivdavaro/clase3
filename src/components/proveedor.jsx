@@ -84,7 +84,8 @@ const Proveedores = () => {
         setPais(item.pais)
     }
 
-    const actualizarProveedor = () => {
+    const actualizarProveedor = e => {
+        e.preventDefault()
         let proveedorActualizado = {
             id: id,
             nombreEmpresa: nombreEmpresa,
@@ -104,6 +105,7 @@ const Proveedores = () => {
         setCiudad('')
         setPais('')
         setId('')
+        setIsEdit(false)
     }
 
 
