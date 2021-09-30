@@ -11,6 +11,7 @@ const Proveedores = () => {
     const [direccion, setDireccion] = useState("")
     const [ciudad, setCiudad] = useState("")
     const [pais, setPais] = useState("")
+    const [id, setId] = useState("")
 
     const [errNombreEmpresa, setErrNombreEmpresa] = useState("")
     const [errNombreContacto, setErrNombreContacto] = useState("")
@@ -18,6 +19,93 @@ const Proveedores = () => {
     const [errDireccion, setErrDireccion] = useState("")
     const [errCiudad, setErrCiudad] = useState("")
     const [errPais, setErrPais] = useState("")
+
+    let [isEdit, setIsEdit] = useState(false)
+
+    const agregarProveedor = e =>{
+        e.preventDefault()
+
+        if( !nombreEmpresa.trim() ){
+            setErrNombreEmpresa('El campo nombre empresa no puede estar vacio')
+        }
+        else if( !nombreContacto.trim() ){
+            setErrNombreContacto('El campo nombre contacto no puede estar vacio')
+        }
+        else if( telefono === 0 ){
+            setErrTelefono('El campo teléfono no puede estar vacio')
+        }
+        else if( !direccion.trim() ){
+            setErrDireccion('El campo dirección no puede estar vacio')
+        }
+        else if( !ciudad.trim() ){
+            setErrCiudad('El campo ciudad no puede estar vacio')
+        }
+        else if( !pais.trim() ){
+            setErrPais('El campo país no puede estar vacio')
+        }else{
+
+            setProveedores(
+                [
+                    ...proveedores,
+                    {
+                        id: nanoid(),
+                        nombreEmpresa: nombreEmpresa,
+                        nombreContacto: nombreContacto,
+                        telefono:telefono,
+                        direccion: direccion,
+                        ciudad: ciudad,
+                        pais:pais
+                        
+                    }
+                ]
+            )
+
+            setNombreEmpresa('')
+            setNombreContacto('')
+            setTelefono('')
+            setDireccion('')
+            setCiudad('')
+            setPais('')
+        } 
+    }
+
+    const eliminarProveedor = (id) => {
+        const proveedorFiltro = proveedores.filter( item => item.id !== id )
+        setProveedores(proveedorFiltro)
+    }
+
+    const editarProveedor = (item) => {
+        setIsEdit(true)
+        setNombreEmpresa(item.nombreEmpresa)
+        setNombreContacto(item.nombreContacto)
+        setTelefono(item.telefono)
+        setDireccion(item.direccion)
+        setCiudad(item.ciudad)
+        setPais(item.pais)
+    }
+
+    const actualizarProveedor = () => {
+        let proveedorActualizado = {
+            id: id,
+            nombreEmpresa: nombreEmpresa,
+            nombreContacto: nombreContacto,
+            telefono:telefono,
+            direccion: direccion,
+            ciudad: ciudad,
+            pais:pais
+        }
+
+        let proveedoresActualizados = proveedores.map( item => (item.id === id) ? proveedorActualizado :  item  )
+        setProveedores(proveedoresActualizados)
+        setNombreEmpresa('')
+        setNombreContacto('')
+        setTelefono('')
+        setDireccion('')
+        setCiudad('')
+        setPais('')
+        setId('')
+    }
+
 
     return (
         <div className="container">
@@ -30,13 +118,13 @@ const Proveedores = () => {
                 <div className="col-sm-4">
                     <br />
                     <h3><b>Formulario</b></h3>
-                    <form>
+                    <form onSubmit= { isEdit ? actualizarProveedor : agregarProveedor } >
 
                         <div className="form-group">
                             <label>Nombre empresa:</label>
                             <input
                                 type="text"
-                                placeholder="Nombre del produto"
+                                placeholder="Nombre del proveedor"
                                 className="form-control mb-2"
                                 onChange={e => setNombreEmpresa(e.target.value)}
                                 value={nombreEmpresa}
@@ -47,7 +135,7 @@ const Proveedores = () => {
                             <label>Nombre Contacto:</label>
                             <input
                                 type="text"
-                                placeholder="Descripción"
+                                placeholder="Nombre de contacto"
                                 className="form-control mb-2"
                                 onChange={e => setNombreContacto(e.target.value)}
                                 value={nombreContacto}
@@ -95,15 +183,62 @@ const Proveedores = () => {
                                 placeholder="País"
                                 className="form-control mb-2"
                                 onChange={e => setPais(e.target.value)}
-                                value={ciudad}
+                                value={pais}
                             />
                             {errPais ? <small className="text-danger">{errPais}</small> : null}
 
                         </div>
-                        <button type="submit" className="btn btn-dark" >Enviar</button>
+                        <button type="submit" className="btn btn-dark" > { isEdit ? "Actualizar" : "Enviar" }  </button>
                     </form>
+                </div>
 
+                <div className="col-sm-8">
+                    <br/>
+                    <h3><b>Lista de proveedores</b></h3>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre empresa</th>
+                                <th scope="col">Nombre Contacto</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Ciudad</th>
+                                <th scope="col">País</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
+                        {
+
+                            proveedores.length === 0 ? (<thead className="list-group-item">Sin proveedores</thead>) : 
+                            (
+                                proveedores.map(
+                                    (item) => (
+                                        <tr className="animate__animated animate__bounceInDown" key={item.id}> 
+
+                                                <td>{ item.nombreEmpresa}</td>
+                                                <td>{ item.nombreContacto}</td>
+                                                <td>{ item.telefono}</td>
+                                                <td>{ item.direccion}</td>
+                                                <td>{ item.ciudad}</td>
+                                                <td>{ item.pais}</td>
+                                            <td>
+                                                <div align="right">
+                                                    <button className="btn btn-sm btn-success mx-2" onClick={ () => editarProveedor(item) }> <i class='fas fa-edit'></i> </button>
+                                                    <button className="btn btn-sm btn-info" onClick={ () => eliminarProveedor(item.id) } > <i class="fa fa-remove"></i> </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+    
+                                    )
+                                )
+
+                            )
+                            
+                        }
+
+                        </tbody>
+                    </table>
                 </div>
 
             </div>

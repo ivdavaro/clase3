@@ -9,6 +9,8 @@ const Productos = () => {
     const [ descripcion, setDescripcion ] = useState("")
     const [ cantidad, setCantidad] = useState(0)
     const [ valor, setValor ] =useState(0)
+    const [ id, setId ] =useState("")
+    
 
     const [errNombre, setErrNombre] = useState(null)
     const [errDescripcion, setErrDescripcion] = useState(null)
@@ -26,10 +28,10 @@ const Productos = () => {
         else if( !descripcion.trim()){
             setErrDescripcion('El campo nombre no puede estar vacio')
         }
-        else if( !cantidad.trim()){
+        else if( cantidad === 0){
             setErrCantidad('El campo nombre no puede estar vacio')
         }
-        else if( !valor.trim()){
+        else if( valor=== 0){
             setErrValor('El campo nombre no puede estar vacio')
         }else{
 
@@ -62,12 +64,29 @@ const Productos = () => {
         setNombre(item.nombre)
         setDescripcion(item.descripcion)
         setCantidad(item.cantidad)
-        setValor(item.valor)
-
-        let idxProd = productos.findIndex( x => x.id === item.id)
-        productos[idxProd].nombre = nombre
-        setProductos(productos)        
+        setValor(item.valor)   
+        setId(item.id)
     }
+
+    const actualizarProducto = () => {
+        let productoActualizado = {
+            id: id,
+            nombre: nombre,
+            descripcion: descripcion,
+            cantidad:cantidad,
+            valor: valor
+        }
+
+        let productosActualizados = productos.map( item => (item.id === id) ? productoActualizado :  item  )
+        setProductos(productosActualizados)
+
+        setNombre('')
+        setDescripcion('')
+        setCantidad(0)
+        setValor(0)
+        setId('')
+    }
+
 
     return (
 
@@ -81,7 +100,7 @@ const Productos = () => {
                 <div className="col-sm-4">
                     <br/>
                     <h3><b>Formulario</b></h3>
-                    <form onSubmit={agregarProducto}>
+                    <form onSubmit={ isEdit ? actualizarProducto : agregarProducto }>
                         
                         <div className="form-group">
                         <label>Nombre producto:</label>
