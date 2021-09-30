@@ -7,20 +7,25 @@ import Proveedores from "./proveedor"
 const Principal = () => {
 
     const [isProducto,setIsProducto] = useState(false)
+    const [isProveedor,setIsProveedor] = useState(false)
 
     const mostrarProductos = () =>{
         setIsProducto(true)
+        setIsProveedor(false)
     }
 
     const mostrarProveedores = () =>{
         setIsProducto(false)
+        setIsProveedor(true)
     }
 
     return (
         <div className = "container">
+            
             <button type="button" class="btn btn-secondary" value="proveedor" onClick={ () => mostrarProveedores() } >Proveedor</button>
             <button type="button" class="btn btn-secondary" value="producto" onClick={ () => mostrarProductos() } >Producto</button>
-            { isProducto ? <Productos/>: <Proveedores/>}
+            { isProducto ? <Productos/> : null }
+            { isProveedor ? <Proveedores/> : null }
         </div>
     )
 }
