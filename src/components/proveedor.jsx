@@ -1,4 +1,4 @@
-import Reac, { useState } from "react"
+import React, { useState } from "react"
 import { nanoid } from "nanoid"
 
 const Proveedores = () => {
@@ -82,6 +82,7 @@ const Proveedores = () => {
         setDireccion(item.direccion)
         setCiudad(item.ciudad)
         setPais(item.pais)
+        setId(item.id)
     }
 
     const actualizarProveedor = e => {
@@ -226,8 +227,8 @@ const Proveedores = () => {
                                                 <td>{ item.pais}</td>
                                             <td>
                                                 <div align="right">
-                                                    <button className="btn btn-sm btn-success mx-2" onClick={ () => editarProveedor(item) }> <i class='fas fa-edit'></i> </button>
-                                                    <button className="btn btn-sm btn-info" onClick={ () => eliminarProveedor(item.id) } > <i class="fa fa-remove"></i> </button>
+                                                    <button className="btn btn-sm btn-success mx-2" onClick={ () => editarProveedor(item) }> <i className='fas fa-edit'></i> </button>
+                                                    <button className="btn btn-sm btn-info" onClick={ () => eliminarProveedor(item.id) } > <i className="fa fa-remove"></i> </button>
                                                 </div>
                                             </td>
                                         </tr>

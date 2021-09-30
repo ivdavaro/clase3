@@ -1,12 +1,13 @@
-import './App.css';
-import Formulario from './components/producto'
-import Proveedores from './components/proveedor';
+import './App.css'
+import Principal from './components/principal'
 
 function App() {
+
+  let isProducto = false;
+
   return (
     <div className="App">
-      <Formulario/>
-      <Proveedores/>
+      <Principal/>
     </div>
   );
 }
